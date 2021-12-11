@@ -8,6 +8,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
 
+
+
 /**
  * Illuminate/Container is a powerful inversion of control container,
  * which can easily be used independent of Laravel to help manage
@@ -40,18 +42,18 @@ $container->bind('template', 'Acme\Template');
 // Bind a "mailer" class to the container
 // Use a callback to set additional settings
 $container->bind('mailer', function ($container) {
-    $mailer = new Acme\Mailer;
-    $mailer->username = 'username';
-    $mailer->password = 'password';
-    $mailer->from = 'foo@bar.com';
+  $mailer = new Acme\Mailer;
+  $mailer->username = 'username';
+  $mailer->password = 'password';
+  $mailer->from = 'foo@bar.com';
 
-    return $mailer;
+  return $mailer;
 });
 
 // Bind a shared "database" class to the container
 // Use a callback to set additional settings
 $container->singleton('database', function ($container) {
-    return new Acme\Database('username', 'password', 'host', 'database');
+  return new Acme\Database('username', 'password', 'host', 'database');
 });
 
 // Bind an existing "authentication" class instance to the container
@@ -74,57 +76,57 @@ $app = AppFactory::create();
 $app->add(new WhoopsMiddleware(['enable' => true]));
 
 $app->get('/', function (Request $request, Response $response) use ($container) {
-    // Create new Acme\Template instance
-    $template = $container->make('template');
+  // Create new Acme\Template instance
+  $template = $container->make('template');
 
-    // Render template
-    $response->getBody()->write($template->render('home'));
+  // Render template
+  $response->getBody()->write($template->render('home'));
 
-    return $response;
+  return $response;
 });
 
 $app->get('/send-email', function (Request $request, Response $response) use ($container) {
-    // Create new Acme\Mailer instance
-    $mailer = $container->make('mailer');
+  // Create new Acme\Mailer instance
+  $mailer = $container->make('mailer');
 
-    // Set mail settings
-    $mailer->to = 'foo@bar.com';
-    $mailer->subject = 'Test email';
-    $mailer->body = 'This is a test email.';
+  // Set mail settings
+  $mailer->to = 'foo@bar.com';
+  $mailer->subject = 'Test email';
+  $mailer->body = 'This is a test email.';
 
-    // Send the email
-    if ($mailer->send()) {
-        $response->getBody()->write('Email successfully sent!');
-    }
+  // Send the email
+  if ($mailer->send()) {
+    $response->getBody()->write('Email successfully sent!');
+  }
 
-    return $response;
+  return $response;
 });
 
 $app->get('/login', function (Request $request, Response $response) use ($container) {
-    // Create new Acme\Authentication instance
-    $auth = $container->make('auth');
+  // Create new Acme\Authentication instance
+  $auth = $container->make('auth');
 
-    // Validate the user credentials
-    if ($auth->verifyLogin('username', 'password')) {
-        $response->getBody()->write('User successfully logged in!');
-    }
+  // Validate the user credentials
+  if ($auth->verifyLogin('username', 'password')) {
+    $response->getBody()->write('User successfully logged in!');
+  }
 
-    return $response;
+  return $response;
 });
 
 $app->get('/articles', function (Request $request, Response $response) use ($container) {
-    // Create new Acme\Database instance
-    $database = $container->make('database');
+  // Create new Acme\Database instance
+  $database = $container->make('database');
 
-    // Select all articles from the database
-    $articles = $database->select('SELECT * FROM articles ORDER BY title');
+  // Select all articles from the database
+  $articles = $database->select('SELECT * FROM articles ORDER BY title');
 
-    // Display the articles
-    foreach ($articles as $article) {
-        $response->getBody()->write('<a href="#">' . $article['title'] . '</a><br>');
-    }
+  // Display the articles
+  foreach ($articles as $article) {
+    $response->getBody()->write('<a href="#">' . $article['title'] . '</a><br>');
+  }
 
-    return $response;
+  return $response;
 });
 
 // Example of automatic resolution, where the container automatically
@@ -137,10 +139,10 @@ $app->get('/automatic-resolution', [$container->make('Acme\Controller'), 'home']
 // Illuminate/Container resolves
 // the concrete implemention.
 $app->get('/interface-to-implementation', function (Request $request, Response $response) use ($container) {
-    $notification = $container->make('Acme\Contracts\NotifyUser');
-    $notification->sendNotification('Somebody hit the url!');
+  $notification = $container->make('Acme\Contracts\NotifyUser');
+  $notification->sendNotification('Somebody hit the url!');
 
-    return $response;
+  return $response;
 });
 
 $app->run();
