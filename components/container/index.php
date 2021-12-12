@@ -9,7 +9,6 @@ use Slim\Factory\AppFactory;
 use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
 
 
-
 /**
  * Illuminate/Container is a powerful inversion of control container,
  * which can easily be used independent of Laravel to help manage
